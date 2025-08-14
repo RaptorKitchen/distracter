@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Subtle mood wash */
+:root{
+  --mood-base: #dfdaea;   /* page base */
+  --m1: #6b3fa0;          /* purple */
+  --m2: #2e7d6b;          /* green */
+  --m3: #441b73;          /* violet */
+}
+
+/* wrapper */
+.moody-bg{
+  position: relative;
+  background: var(--mood-base);
+  overflow: hidden;
+  isolation: isolate; /* keep overlay behind content */
+}
+
+/* animated light gradient overlay */
+.moody-bg::before{
+  content:"";
+  position:absolute; inset:-10%;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.18;
+  background: linear-gradient(
+    120deg,
+    var(--m1) 0%,
+    var(--m2) 50%,
+    var(--m3) 100%
+  );
+  background-size: 200% 200%; /* drift in and out of page */
+  animation: mood-shift 20s ease-in-out infinite alternate;
+  filter: blur(18px); /* soft transitions */
+}
+
+/* soft vignette */
+.moody-bg::after{
+  content:"";
+  position:absolute; inset:-2%;
+  z-index:-1;
+  pointer-events:none;
+  background: radial-gradient(closest-side, transparent 65%, rgba(0,0,0,.08));
+}
+
+/* drift the gradient slowly */
+@keyframes mood-shift{
+  0%   { background-position: 0% 50%;   filter: blur(18px); }
+  50%  { background-position: 100% 50%; filter: blur(22px); }
+  100% { background-position: 0% 50%;   filter: blur(18px); }
+}
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .moody-bg::before{ animation:none; }
+}
+
